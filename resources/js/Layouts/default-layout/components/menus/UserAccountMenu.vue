@@ -46,7 +46,9 @@
 
       <!--begin::Menu item-->
       <div class="menu-item px-5">
-        <Link :href="''" @click="signOut()" class="menu-link px-5"> {{ $t('buttonValue.signOut') }} </Link>
+        <Link href="/logout" method="post" as="button" class="menu-link btn px-5">
+            {{ $t('buttonValue.signOut') }}
+        </Link>
       </div>
       <!--end::Menu item-->
     </div>
@@ -59,7 +61,7 @@
   import { useI18n } from "vue-i18n";
   import { useAuthStore } from "@/Stores/auth";
   import { useRouter } from "vue-router";
-  import { Link, router } from '@inertiajs/vue3'
+  import { Link, router } from '@inertiajs/vue3';
   import { usePage } from '@inertiajs/vue3';
   import { getInitials } from '@/Core/helpers/Helper';
 
@@ -100,7 +102,7 @@
 
   const signOut = () => {
       localStorage.removeItem('permissions');
-      router.post('/logout/');
+      router.post('/logout');
   };
 
   const setLang = (lang: string) => {
