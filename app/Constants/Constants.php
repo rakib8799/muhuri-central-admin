@@ -26,4 +26,9 @@ class Constants
     public const MALE = 'male';
     public const FEMALE = 'female';
     public const OTHERS = 'others';
+    public const DOMAIN = 'mkrdev.xyz';
+    public const SUB_DOMAIN = 'muhuri-web';
+    public const DEV_SERVER = 'dev';
+    public const STAGING_SERVER = 'staging';
+    public const USER_PANEL = 'muhuri';
 }

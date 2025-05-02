@@ -2,6 +2,7 @@
 
 namespace App\Services\Company;
 
+use App\Constants\Constants;
 use App\Models\Company\Company;
 use App\Services\BaseModelService;
 use App\Services\ConfigurationService;
@@ -48,7 +49,7 @@ class CompanyService extends BaseModelService
             $companyAdminDomain => $companyAdminDomain
         ];
 
-        $validatedData['email'] = $validatedData['mobile_number'] . '@muhuri.app';
+        $validatedData['email'] = $validatedData['mobile_number'] . '@' . Constants::SUB_DOMAIN . '.' . Constants::DOMAIN;
         $validatedData['domain'] = $companyAdminDomain;
         $validatedData['allowed_domains'] = json_encode($companyDomainsArray);
 
