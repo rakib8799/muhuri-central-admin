@@ -26,7 +26,7 @@ class MuhuriTenantCreateService extends MuhuriBaseService
         $this->domain = null;
         $this->method = null;
         $this->configurationService = $configurationService;
-        $this->httpProtocol = $this->configurationService->getConfiguration('http_protocol');
+        $this->httpProtocol = $this->configurationService->getConfiguration('company_http_protocol');
     }
 
 
