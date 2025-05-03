@@ -41,6 +41,7 @@ class MuhuriTenantCreateService extends MuhuriBaseService
         ];
 
         $url = $this->muhuriWebAPIUrl . $this->url;
+
         if ($this->method === 'POST') {
             $response = Http::withHeaders($header)->post($url, $data);
         } else {

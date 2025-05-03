@@ -34,7 +34,7 @@ class MuhuriService extends MuhuriBaseService
         $this->domain = null;
         $this->companyService = $companyService;
         $this->configurationService = $configurationService;
-        $this->httpProtocol = $this->configurationService->getConfiguration('http_protocol');
+        $this->httpProtocol = $this->configurationService->getConfiguration('company_http_protocol');
     }
 
 
