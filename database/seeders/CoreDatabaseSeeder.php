@@ -18,8 +18,8 @@ class CoreDatabaseSeeder extends Seeder
         DB::table('core_databases')->insert([
             'db_type' => env('DB_CONNECTION', 'mysql'),
             'db_host' => env('DB_HOST', '127.0.0.1'),
-            'db_username' => env('DB_USERNAME'),
-            'db_password' => env('DB_PASSWORD'),
+            'db_username' => 'root',
+            'db_password' => 'Amirakib007@',
             'db_name' =>  'mysql',
             'db_port' => env('DB_PORT', '3306'),
             'is_active' => true,

@@ -51,8 +51,8 @@
             <a href="/" class="d-lg-none">
               <img
                 alt="Logo"
-                :src="getAssetPath('/media/logos/nonditosoft-logo.png')"
-                class="h-25px"
+                :src="getAssetPath('/media/logos/mkr-logo.png')"
+                style="height: 25vh;"
               />
             </a>
           </div>
