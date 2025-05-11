@@ -1,41 +1,71 @@
-#!/bin/sh
+#!/bin/bash
 
-ssh -o StrictHostKeyChecking=no $USER@$HOST << 'ENDSSH'
-  set -e  # Exit immediately if any command fails
+echo "🚀 Starting Laravel, Inertia & Vue.js deployment..."
 
-  # Load NVM and use Node.js v22.14.0
-  export NVM_DIR="$HOME/.nvm"
-  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-  nvm use 22.14.0
+# Configurations
+USER="muhuri"
+SUB_DOMAIN="muhuri-central-admin"
+DOMAIN="mkrdev.xyz"
 
-  cd /var/www/html/muhuri-web-central-admin/
-  echo "$PWD"
+APP_DIR="/home/$USER/web/$SUB_DOMAIN.$DOMAIN/public_html"
+PHP="php8.3"   # Ensure this matches your PHP version
 
-  git stash -u
-  git pull
-  echo "Pulled latest changes"
+# Navigate to app directory
+cd "$APP_DIR" || {
+    echo "❌ Failed to access $APP_DIR"
+    exit 1
+}
 
-  composer install --no-interaction --prefer-dist --optimize-autoloader
-  composer update --no-interaction
-  echo "Installed composer dependencies"
+# Check if .git exists
+if [ ! -d ".git" ]; then
+    echo "❌ No Git repository found in $APP_DIR"
+    exit 1
+fi
 
-  echo "============================Removed old node_modules============================"
-  sudo rm -rf node_modules/
+echo "📥 Pulling latest changes from Git..."
+git reset --hard
+git pull origin main
 
-  echo "============================Install node_modules============================"
-  # Use the absolute paths
-  #  /home/ubuntu/.nvm/versions/node/v20.19.0/bin/npm install
-  #  /home/ubuntu/.nvm/versions/node/v20.19.0/bin/npm run build
-  npm install
-  npm run build
+# Ensure the app is up-to-date with PHP dependencies
+echo "📦 Installing PHP dependencies..."
+composer install
 
-  ln -s /var/www/html/muhuri-web-central-admin/public/media/ /var/www/html/muhuri-web-central-admin/public/build/
-  echo "Installed npm dependencies"
-  echo "============================npm build done============================"
+# Laravel specific configurations (environment file, key generation, etc.)
+echo "🔐 Setting up Laravel application..."
+if [ ! -f ".env" ]; then
+    cp .env.example .env
+fi
 
-  php artisan migrate --no-interaction --force
-  echo "============================migrated============================"
+# Set the correct permissions for Laravel storage and cache
+chmod -R ug+rwx storage bootstrap/cache
+chown -R www-data:www-data storage bootstrap/cache
 
-  sudo systemctl reload nginx
-  echo "Deployed!"
-ENDSSH
+touch storage/logs/laravel.log
+chmod 666 storage/logs/laravel.log
+chown www-data:www-data storage/logs/laravel.log
+
+echo "🔑 Generating application key if not set..."
+$PHP artisan key:generate --force
+
+echo "🧪 Running migrations and setting up caches..."
+$PHP artisan migrate --force
+$PHP artisan config:cache
+$PHP artisan route:cache
+$PHP artisan view:cache
+
+# Install and build Node.js (Vue.js) dependencies
+echo "🧱 Installing Node dependencies and building assets..."
+npm ci || npm install
+npm run build
+
+# Optional: Clear and cache all assets to ensure it's up-to-date
+npm run prod
+
+echo "✅ Deployment complete!"
+
+# Restart services if required (e.g., Nginx or PHP-FPM)
+echo "🔄 Restarting PHP-FPM and Nginx..."
+systemctl restart php8.3-fpm
+systemctl restart nginx
+
+echo "🚀 Site deployed and services restarted successfully!"
