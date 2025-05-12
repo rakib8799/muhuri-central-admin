@@ -10,8 +10,8 @@ exec 2>&1
 echo "🚀 Starting full Laravel + Inertia + Vue.js deployment..."
 
 # === CONFIGURATION ===
-USER="afsbf"
-SUB_DOMAIN="afsbf"
+USER="muhuri"
+SUB_DOMAIN="muhuri-central-admin"
 DOMAIN="mkrdev.xyz"
 APP_DIR="/home/$USER/web/$SUB_DOMAIN.$DOMAIN/public_html"
 PHP="php8.3"
@@ -71,7 +71,7 @@ $PHP artisan view:cache
 
 # === STEP 7: Database Migrations ===
 echo "🧬 Running migrations..."
-# $PHP artisan migrate --force
+$PHP artisan migrate --force
 
 # === STEP 8: NPM Build ===
 echo "🧱 Building frontend assets..."
