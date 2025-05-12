@@ -32,7 +32,7 @@ git pull origin main --ff-only
 
 # === STEP 3: Clear Vendor Directory ===
 echo "🧹 Deleting vendor directory..."
-rm -rf vendor/ composer.lock
+rm -rf vendor/
 
 # === STEP 4: Composer Install ===
 echo "📦 Installing Composer dependencies..."
@@ -46,7 +46,7 @@ sudo -u "$USER" composer clear-cache || {
 
 # Run Composer install with the --no-dev flag to avoid installing unnecessary dev dependencies
 echo "📦 Installing Composer dependencies..."
-sudo -u "$USER" composer install --no-dev --optimize-autoloader || {
+sudo -u "$USER" composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev --no-scripts || {
     echo "❌ Composer install failed"
     exit 1
 }
