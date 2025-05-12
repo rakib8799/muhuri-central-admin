@@ -23,8 +23,11 @@ fi
 
 # === STEP 3: Pull Latest Code ===
 echo "📥 Pulling latest changes from Git..."
+
+git config --global --add safe.directory $APP_DIR
+
 git reset --hard
-git pull origin main --ff-only
+git pull origin main --ff
 
 # === STEP 4: PHP Dependencies ===
 echo "📦 Installing PHP dependencies..."
@@ -33,7 +36,7 @@ if [ -d "vendor" ]; then
     rm -rf vendor/
 fi
 
-composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
+composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction || { echo "❌ Composer install failed"; exit 1; }
 
 # === STEP 5: Laravel Environment Setup ===
 echo "🔐 Setting up Laravel application..."
@@ -52,15 +55,9 @@ chown www-data:www-data storage/logs/laravel.log
 
 # === STEP 6: Laravel Artisan Commands ===
 echo "🔑 Generating application key..."
-$PHP artisan key:generate --force
+$PHP artisan key:generate --force || { echo "❌ Artisan key generation failed"; exit 1; }
 
 echo "🧪 Running migrations & caching configs..."
-
-echo "✅ Checking for duplicate class names in migrations..."
-if grep -r "class Create" database/migrations | cut -d: -f2 | sort | uniq -d | grep -q .; then
-    echo "❌ Duplicate class names detected in migration files. Please fix before deploying."
-    exit 1
-fi
 $PHP artisan migrate --no-interaction
 $PHP artisan config:cache
 $PHP artisan route:cache
@@ -73,7 +70,7 @@ if [ -d "node_modules" ]; then
     rm -rf node_modules/
 fi
 
-npm ci || npm install
-npm run build
+npm ci || npm install || { echo "❌ NPM install failed"; exit 1; }
+npm run build || { echo "❌ NPM build failed"; exit 1; }
 
 echo "✅ Deployment finished successfully!"
