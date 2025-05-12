@@ -32,7 +32,7 @@ git pull origin main --ff-only
 
 # === STEP 3: Clear Vendor Directory ===
 echo "🧹 Deleting vendor directory..."
-rm -rf vendor/
+rm -rf vendor/ composer.lock
 
 # === STEP 4: Composer Install ===
 echo "📦 Installing Composer dependencies..."
