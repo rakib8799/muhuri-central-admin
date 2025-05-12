@@ -55,7 +55,13 @@ echo "🔑 Generating application key..."
 $PHP artisan key:generate --force
 
 echo "🧪 Running migrations & caching configs..."
-$PHP artisan migrate --force
+
+echo "✅ Checking for duplicate class names in migrations..."
+if grep -r "class Create" database/migrations | cut -d: -f2 | sort | uniq -d | grep -q .; then
+    echo "❌ Duplicate class names detected in migration files. Please fix before deploying."
+    exit 1
+fi
+$PHP artisan migrate --no-interaction
 $PHP artisan config:cache
 $PHP artisan route:cache
 $PHP artisan view:cache
