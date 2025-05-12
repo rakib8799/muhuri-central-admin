@@ -46,8 +46,15 @@ sudo -u "$USER" composer clear-cache || {
 
 # Run Composer install with the --no-dev flag to avoid installing unnecessary dev dependencies
 echo "📦 Installing Composer dependencies..."
-sudo -u "$USER" composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev || {
+sudo -u "$USER" composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts || {
     echo "❌ Composer install failed"
+    exit 1
+}
+
+# Run Laravel package discover manually
+echo "🔍 Running artisan package discover..."
+sudo -u "$USER" $PHP artisan package:discover || {
+    echo "❌ Artisan package:discover failed"
     exit 1
 }
 
