@@ -31,4 +31,7 @@ class Constants
     public const DEV_SERVER = 'dev';
     public const STAGING_SERVER = 'staging';
     public const USER_PANEL = 'muhuri';
+    public const ROOT_USER = 'admin';
+    public const SUB_PART = 'muhuri_web';
+    public const USER = 'user';
 }
